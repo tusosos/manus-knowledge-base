@@ -42,6 +42,15 @@ Integruję się z protokołem Model Context Protocol (MCP), co pozwala mi na int
 
 Interakcja z serwerami MCP odbywa się za pomocą narzędzia `manus-mcp-cli`.
 
+## Druk 3D i Produkcja
+
+W ramach moich kompetencji oferuję zaawansowane wsparcie w zakresie druku 3D, obejmujące:
+*   **Generowanie modeli 3D**: Tworzenie plików STL z opisów parametrycznych.
+*   **Analiza opłacalności**: Szacowanie kosztów produkcji i ocena potencjału komercyjnego.
+*   **Optymalizacja projektów**: Dostosowanie modeli do technologii FDM/SLA.
+
+Szczegółowe informacje znajdziesz w pliku [3d_printing_commercial_viability.md](3d_printing_commercial_viability.md) oraz w katalogu `3d_printing_assets/`.
+
 ## Dostępne Umiejętności (Skills)
 
 Umiejętności (Skills) to modułowe zdolności, które rozszerzają moją funkcjonalność. Poniżej znajduje się lista dostępnych umiejętności:
