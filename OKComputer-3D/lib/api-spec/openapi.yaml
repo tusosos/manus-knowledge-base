@@ -1,0 +1,1482 @@
+openapi: 3.1.0
+info:
+  title: Api
+  version: 0.1.0
+  description: 3D Print Business Hub API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: dashboard
+    description: Dashboard summary data
+  - name: tasks
+    description: Task management
+  - name: projects
+    description: Project management
+  - name: clients
+    description: Client management
+  - name: filaments
+    description: Filament/inventory management
+  - name: printJobs
+    description: Print queue management
+  - name: quotes
+    description: Quote management
+  - name: analytics
+    description: Analytics and reporting
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get dashboard summary stats
+      responses:
+        "200":
+          description: Dashboard summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+  /dashboard/activity:
+    get:
+      operationId: getDashboardActivity
+      tags: [dashboard]
+      summary: Get recent activity feed
+      responses:
+        "200":
+          description: Recent activity
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActivityItem"
+
+  /tasks:
+    get:
+      operationId: listTasks
+      tags: [tasks]
+      summary: List all tasks
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [TODO, IN_PROGRESS, REVIEW, DONE, CANCELLED]
+        - name: priority
+          in: query
+          schema:
+            type: string
+            enum: [LOW, MEDIUM, HIGH, URGENT]
+        - name: projectId
+          in: query
+          schema:
+            type: ["string", "null"]
+      responses:
+        "200":
+          description: List of tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Task"
+    post:
+      operationId: createTask
+      tags: [tasks]
+      summary: Create a new task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTaskBody"
+      responses:
+        "201":
+          description: Created task
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+
+  /tasks/{id}:
+    get:
+      operationId: getTask
+      tags: [tasks]
+      summary: Get a task by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Task
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateTask
+      tags: [tasks]
+      summary: Update a task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateTaskBody"
+      responses:
+        "200":
+          description: Updated task
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+    delete:
+      operationId: deleteTask
+      tags: [tasks]
+      summary: Delete a task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted
+
+  /projects:
+    get:
+      operationId: listProjects
+      tags: [projects]
+      summary: List all projects
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [DRAFT, PLANNING, IN_PROGRESS, ON_HOLD, COMPLETED, CANCELLED]
+        - name: clientId
+          in: query
+          schema:
+            type: ["string", "null"]
+      responses:
+        "200":
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Project"
+    post:
+      operationId: createProject
+      tags: [projects]
+      summary: Create a new project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProjectBody"
+      responses:
+        "201":
+          description: Created project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+
+  /projects/{id}:
+    get:
+      operationId: getProject
+      tags: [projects]
+      summary: Get a project by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateProject
+      tags: [projects]
+      summary: Update a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProjectBody"
+      responses:
+        "200":
+          description: Updated project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+    delete:
+      operationId: deleteProject
+      tags: [projects]
+      summary: Delete a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted
+
+  /clients:
+    get:
+      operationId: listClients
+      tags: [clients]
+      summary: List all clients
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [INDIVIDUAL, COMPANY]
+        - name: search
+          in: query
+          schema:
+            type: ["string", "null"]
+      responses:
+        "200":
+          description: List of clients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Client"
+    post:
+      operationId: createClient
+      tags: [clients]
+      summary: Create a new client
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateClientBody"
+      responses:
+        "201":
+          description: Created client
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+
+  /clients/{id}:
+    get:
+      operationId: getClient
+      tags: [clients]
+      summary: Get a client by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Client
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateClient
+      tags: [clients]
+      summary: Update a client
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateClientBody"
+      responses:
+        "200":
+          description: Updated client
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+    delete:
+      operationId: deleteClient
+      tags: [clients]
+      summary: Delete a client
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted
+
+  /filaments:
+    get:
+      operationId: listFilaments
+      tags: [filaments]
+      summary: List all filaments
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: ["string", "null"]
+        - name: brand
+          in: query
+          schema:
+            type: ["string", "null"]
+        - name: lowStock
+          in: query
+          schema:
+            type: ["boolean", "null"]
+      responses:
+        "200":
+          description: List of filaments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Filament"
+    post:
+      operationId: createFilament
+      tags: [filaments]
+      summary: Add a new filament
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateFilamentBody"
+      responses:
+        "201":
+          description: Created filament
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Filament"
+
+  /filaments/{id}:
+    get:
+      operationId: getFilament
+      tags: [filaments]
+      summary: Get a filament by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Filament
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Filament"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateFilament
+      tags: [filaments]
+      summary: Update a filament
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateFilamentBody"
+      responses:
+        "200":
+          description: Updated filament
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Filament"
+    delete:
+      operationId: deleteFilament
+      tags: [filaments]
+      summary: Delete a filament
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted
+
+  /print-jobs:
+    get:
+      operationId: listPrintJobs
+      tags: [printJobs]
+      summary: List all print jobs
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [QUEUED, PREPARING, PRINTING, PAUSED, COMPLETED, FAILED, CANCELLED]
+        - name: filamentId
+          in: query
+          schema:
+            type: ["string", "null"]
+      responses:
+        "200":
+          description: List of print jobs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PrintJob"
+    post:
+      operationId: createPrintJob
+      tags: [printJobs]
+      summary: Add a new print job
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePrintJobBody"
+      responses:
+        "201":
+          description: Created print job
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PrintJob"
+
+  /print-jobs/{id}:
+    get:
+      operationId: getPrintJob
+      tags: [printJobs]
+      summary: Get a print job by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Print job
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PrintJob"
+        "404":
+          description: Not found
+    patch:
+      operationId: updatePrintJob
+      tags: [printJobs]
+      summary: Update a print job
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdatePrintJobBody"
+      responses:
+        "200":
+          description: Updated print job
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PrintJob"
+    delete:
+      operationId: deletePrintJob
+      tags: [printJobs]
+      summary: Delete a print job
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted
+
+  /quotes:
+    get:
+      operationId: listQuotes
+      tags: [quotes]
+      summary: List all quotes
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [DRAFT, SENT, ACCEPTED, REJECTED, EXPIRED]
+        - name: clientId
+          in: query
+          schema:
+            type: ["string", "null"]
+      responses:
+        "200":
+          description: List of quotes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Quote"
+    post:
+      operationId: createQuote
+      tags: [quotes]
+      summary: Create a new quote
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateQuoteBody"
+      responses:
+        "201":
+          description: Created quote
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quote"
+
+  /quotes/{id}:
+    get:
+      operationId: getQuote
+      tags: [quotes]
+      summary: Get a quote by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Quote
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quote"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateQuote
+      tags: [quotes]
+      summary: Update a quote
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateQuoteBody"
+      responses:
+        "200":
+          description: Updated quote
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quote"
+    delete:
+      operationId: deleteQuote
+      tags: [quotes]
+      summary: Delete a quote
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted
+
+  /analytics/summary:
+    get:
+      operationId: getAnalyticsSummary
+      tags: [analytics]
+      summary: Get analytics overview data
+      parameters:
+        - name: period
+          in: query
+          schema:
+            type: string
+            enum: [week, month, quarter, year]
+            default: month
+      responses:
+        "200":
+          description: Analytics summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalyticsSummary"
+
+  /analytics/revenue:
+    get:
+      operationId: getRevenueData
+      tags: [analytics]
+      summary: Get revenue chart data
+      parameters:
+        - name: period
+          in: query
+          schema:
+            type: string
+            enum: [week, month, quarter, year]
+            default: month
+      responses:
+        "200":
+          description: Revenue data points
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RevenueDataPoint"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    DashboardSummary:
+      type: object
+      properties:
+        activeProjects:
+          type: integer
+        pendingTasks:
+          type: integer
+        activePrintJobs:
+          type: integer
+        totalClients:
+          type: integer
+        monthlyRevenue:
+          type: number
+        pendingQuotes:
+          type: integer
+        lowStockFilaments:
+          type: integer
+        completedJobsThisMonth:
+          type: integer
+      required:
+        - activeProjects
+        - pendingTasks
+        - activePrintJobs
+        - totalClients
+        - monthlyRevenue
+        - pendingQuotes
+        - lowStockFilaments
+        - completedJobsThisMonth
+
+    ActivityItem:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum: [task, project, print_job, quote, client, filament]
+        title:
+          type: string
+        description:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - type
+        - title
+        - description
+        - createdAt
+
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [TODO, IN_PROGRESS, REVIEW, DONE, CANCELLED]
+        priority:
+          type: string
+          enum: [LOW, MEDIUM, HIGH, URGENT]
+        dueDate:
+          type: ["string", "null"]
+          format: date-time
+        projectId:
+          type: ["string", "null"]
+        projectName:
+          type: ["string", "null"]
+        tags:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - status
+        - priority
+        - tags
+        - createdAt
+        - updatedAt
+
+    CreateTaskBody:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [TODO, IN_PROGRESS, REVIEW, DONE, CANCELLED]
+          default: TODO
+        priority:
+          type: string
+          enum: [LOW, MEDIUM, HIGH, URGENT]
+          default: MEDIUM
+        dueDate:
+          type: ["string", "null"]
+          format: date-time
+        projectId:
+          type: ["string", "null"]
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+        - title
+
+    UpdateTaskBody:
+      type: object
+      properties:
+        title:
+          type: ["string", "null"]
+        description:
+          type: ["string", "null"]
+        status:
+          type: ["string", "null"]
+          enum: [TODO, IN_PROGRESS, REVIEW, DONE, CANCELLED, null]
+        priority:
+          type: ["string", "null"]
+          enum: [LOW, MEDIUM, HIGH, URGENT, null]
+        dueDate:
+          type: ["string", "null"]
+          format: date-time
+        projectId:
+          type: ["string", "null"]
+        tags:
+          type: array
+          items:
+            type: string
+
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [DRAFT, PLANNING, IN_PROGRESS, ON_HOLD, COMPLETED, CANCELLED]
+        priority:
+          type: string
+          enum: [LOW, MEDIUM, HIGH, URGENT]
+        clientId:
+          type: ["string", "null"]
+        clientName:
+          type: ["string", "null"]
+        budget:
+          type: ["number", "null"]
+        progress:
+          type: integer
+        startDate:
+          type: ["string", "null"]
+          format: date-time
+        deadline:
+          type: ["string", "null"]
+          format: date-time
+        tags:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - status
+        - priority
+        - progress
+        - tags
+        - createdAt
+        - updatedAt
+
+    CreateProjectBody:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [DRAFT, PLANNING, IN_PROGRESS, ON_HOLD, COMPLETED, CANCELLED]
+          default: DRAFT
+        priority:
+          type: string
+          enum: [LOW, MEDIUM, HIGH, URGENT]
+          default: MEDIUM
+        clientId:
+          type: ["string", "null"]
+        budget:
+          type: ["number", "null"]
+        startDate:
+          type: ["string", "null"]
+          format: date-time
+        deadline:
+          type: ["string", "null"]
+          format: date-time
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+        - name
+
+    UpdateProjectBody:
+      type: object
+      properties:
+        name:
+          type: ["string", "null"]
+        description:
+          type: ["string", "null"]
+        status:
+          type: ["string", "null"]
+          enum: [DRAFT, PLANNING, IN_PROGRESS, ON_HOLD, COMPLETED, CANCELLED, null]
+        priority:
+          type: ["string", "null"]
+          enum: [LOW, MEDIUM, HIGH, URGENT, null]
+        clientId:
+          type: ["string", "null"]
+        budget:
+          type: ["number", "null"]
+        progress:
+          type: ["integer", "null"]
+        startDate:
+          type: ["string", "null"]
+          format: date-time
+        deadline:
+          type: ["string", "null"]
+          format: date-time
+        tags:
+          type: array
+          items:
+            type: string
+
+    Client:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: ["string", "null"]
+        type:
+          type: string
+          enum: [INDIVIDUAL, COMPANY]
+        companyName:
+          type: ["string", "null"]
+        taxId:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        totalOrders:
+          type: integer
+        totalRevenue:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - email
+        - type
+        - totalOrders
+        - totalRevenue
+        - createdAt
+        - updatedAt
+
+    CreateClientBody:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: ["string", "null"]
+        type:
+          type: string
+          enum: [INDIVIDUAL, COMPANY]
+          default: INDIVIDUAL
+        companyName:
+          type: ["string", "null"]
+        taxId:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+      required:
+        - name
+        - email
+
+    UpdateClientBody:
+      type: object
+      properties:
+        name:
+          type: ["string", "null"]
+        email:
+          type: ["string", "null"]
+        phone:
+          type: ["string", "null"]
+        type:
+          type: ["string", "null"]
+          enum: [INDIVIDUAL, COMPANY, null]
+        companyName:
+          type: ["string", "null"]
+        taxId:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+
+    Filament:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        brand:
+          type: string
+        type:
+          type: string
+        color:
+          type: string
+        colorHex:
+          type: ["string", "null"]
+        stockWeight:
+          type: number
+        totalWeight:
+          type: number
+        lowStockThreshold:
+          type: number
+        pricePerKg:
+          type: number
+        nozzleTemp:
+          type: ["integer", "null"]
+        bedTemp:
+          type: ["integer", "null"]
+        isActive:
+          type: boolean
+        isLowStock:
+          type: boolean
+        location:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - brand
+        - type
+        - color
+        - stockWeight
+        - totalWeight
+        - lowStockThreshold
+        - pricePerKg
+        - isActive
+        - isLowStock
+        - createdAt
+        - updatedAt
+
+    CreateFilamentBody:
+      type: object
+      properties:
+        name:
+          type: string
+        brand:
+          type: string
+        type:
+          type: string
+        color:
+          type: string
+        colorHex:
+          type: ["string", "null"]
+        stockWeight:
+          type: number
+        totalWeight:
+          type: number
+        lowStockThreshold:
+          type: number
+          default: 200
+        pricePerKg:
+          type: number
+        nozzleTemp:
+          type: ["integer", "null"]
+        bedTemp:
+          type: ["integer", "null"]
+        location:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+      required:
+        - name
+        - brand
+        - type
+        - color
+        - stockWeight
+        - totalWeight
+        - pricePerKg
+
+    UpdateFilamentBody:
+      type: object
+      properties:
+        name:
+          type: ["string", "null"]
+        brand:
+          type: ["string", "null"]
+        type:
+          type: ["string", "null"]
+        color:
+          type: ["string", "null"]
+        colorHex:
+          type: ["string", "null"]
+        stockWeight:
+          type: ["number", "null"]
+        totalWeight:
+          type: ["number", "null"]
+        lowStockThreshold:
+          type: ["number", "null"]
+        pricePerKg:
+          type: ["number", "null"]
+        nozzleTemp:
+          type: ["integer", "null"]
+        bedTemp:
+          type: ["integer", "null"]
+        isActive:
+          type: ["boolean", "null"]
+        location:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+
+    PrintJob:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [QUEUED, PREPARING, PRINTING, PAUSED, COMPLETED, FAILED, CANCELLED]
+        filamentId:
+          type: string
+        filamentName:
+          type: string
+        filamentColor:
+          type: string
+        filamentColorHex:
+          type: ["string", "null"]
+        quantity:
+          type: integer
+        completedQuantity:
+          type: integer
+        estimatedTime:
+          type: ["integer", "null"]
+        actualTime:
+          type: ["integer", "null"]
+        estimatedFilamentWeight:
+          type: ["number", "null"]
+        actualFilamentWeight:
+          type: ["number", "null"]
+        priority:
+          type: integer
+        scheduledFor:
+          type: ["string", "null"]
+          format: date-time
+        startedAt:
+          type: ["string", "null"]
+          format: date-time
+        completedAt:
+          type: ["string", "null"]
+          format: date-time
+        notes:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - status
+        - filamentId
+        - filamentName
+        - filamentColor
+        - quantity
+        - completedQuantity
+        - priority
+        - createdAt
+        - updatedAt
+
+    CreatePrintJobBody:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        filamentId:
+          type: string
+        quantity:
+          type: integer
+          default: 1
+        estimatedTime:
+          type: ["integer", "null"]
+        estimatedFilamentWeight:
+          type: ["number", "null"]
+        priority:
+          type: integer
+          default: 5
+        scheduledFor:
+          type: ["string", "null"]
+          format: date-time
+        notes:
+          type: ["string", "null"]
+      required:
+        - name
+        - filamentId
+
+    UpdatePrintJobBody:
+      type: object
+      properties:
+        name:
+          type: ["string", "null"]
+        description:
+          type: ["string", "null"]
+        status:
+          type: ["string", "null"]
+          enum: [QUEUED, PREPARING, PRINTING, PAUSED, COMPLETED, FAILED, CANCELLED, null]
+        filamentId:
+          type: ["string", "null"]
+        quantity:
+          type: ["integer", "null"]
+        completedQuantity:
+          type: ["integer", "null"]
+        estimatedTime:
+          type: ["integer", "null"]
+        actualTime:
+          type: ["integer", "null"]
+        estimatedFilamentWeight:
+          type: ["number", "null"]
+        actualFilamentWeight:
+          type: ["number", "null"]
+        priority:
+          type: ["integer", "null"]
+        scheduledFor:
+          type: ["string", "null"]
+          format: date-time
+        startedAt:
+          type: ["string", "null"]
+          format: date-time
+        completedAt:
+          type: ["string", "null"]
+          format: date-time
+        notes:
+          type: ["string", "null"]
+
+    Quote:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        status:
+          type: string
+          enum: [DRAFT, SENT, ACCEPTED, REJECTED, EXPIRED]
+        clientId:
+          type: ["string", "null"]
+        clientName:
+          type: ["string", "null"]
+        projectId:
+          type: ["string", "null"]
+        totalAmount:
+          type: number
+        validUntil:
+          type: ["string", "null"]
+          format: date-time
+        notes:
+          type: ["string", "null"]
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/QuoteItem"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - status
+        - totalAmount
+        - items
+        - createdAt
+        - updatedAt
+
+    QuoteItem:
+      type: object
+      properties:
+        id:
+          type: string
+        description:
+          type: string
+        quantity:
+          type: integer
+        unitPrice:
+          type: number
+        total:
+          type: number
+      required:
+        - id
+        - description
+        - quantity
+        - unitPrice
+        - total
+
+    CreateQuoteBody:
+      type: object
+      properties:
+        title:
+          type: string
+        clientId:
+          type: ["string", "null"]
+        projectId:
+          type: ["string", "null"]
+        validUntil:
+          type: ["string", "null"]
+          format: date-time
+        notes:
+          type: ["string", "null"]
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/CreateQuoteItemBody"
+      required:
+        - title
+
+    CreateQuoteItemBody:
+      type: object
+      properties:
+        description:
+          type: string
+        quantity:
+          type: integer
+        unitPrice:
+          type: number
+      required:
+        - description
+        - quantity
+        - unitPrice
+
+    UpdateQuoteBody:
+      type: object
+      properties:
+        title:
+          type: ["string", "null"]
+        status:
+          type: ["string", "null"]
+          enum: [DRAFT, SENT, ACCEPTED, REJECTED, EXPIRED, null]
+        clientId:
+          type: ["string", "null"]
+        projectId:
+          type: ["string", "null"]
+        validUntil:
+          type: ["string", "null"]
+          format: date-time
+        notes:
+          type: ["string", "null"]
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/CreateQuoteItemBody"
+
+    AnalyticsSummary:
+      type: object
+      properties:
+        totalRevenue:
+          type: number
+        totalProjects:
+          type: integer
+        completedProjects:
+          type: integer
+        totalPrintJobs:
+          type: integer
+        completedPrintJobs:
+          type: integer
+        averageJobTime:
+          type: number
+        totalFilamentUsed:
+          type: number
+        topFilamentType:
+          type: string
+      required:
+        - totalRevenue
+        - totalProjects
+        - completedProjects
+        - totalPrintJobs
+        - completedPrintJobs
+        - averageJobTime
+        - totalFilamentUsed
+        - topFilamentType
+
+    RevenueDataPoint:
+      type: object
+      properties:
+        label:
+          type: string
+        revenue:
+          type: number
+        cost:
+          type: number
+        profit:
+          type: number
+        jobCount:
+          type: integer
+      required:
+        - label
+        - revenue
+        - cost
+        - profit
+        - jobCount

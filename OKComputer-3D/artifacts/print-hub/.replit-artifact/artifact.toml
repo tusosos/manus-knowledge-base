@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "3D Print Business Hub"
+version = "1.0.0"
+id = "artifacts/print-hub"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 21441
+
+[services.development]
+run = "pnpm --filter @workspace/print-hub run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/print-hub", "run", "build" ]
+publicDir = "artifacts/print-hub/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21441"
+BASE_PATH = "/"

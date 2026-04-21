@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Druk 3D — Outcome Ad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden; }
+  .ad {
+    width: 100vw; height: 100vh; background: #fbbf24; color: #0a0a0a;
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 6vh 7vw; box-sizing: border-box;
+  }
+  .logo { display: flex; align-items: center; gap: 1.2vw; }
+  .logo-mark {
+    width: 5vh; height: 5vh; border: 2px solid #0a0a0a; border-radius: 0.6vw;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-mark svg { width: 60%; height: 60%; fill: #0a0a0a; }
+  .logo-text {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    font-size: 2.4vw; letter-spacing: -0.02em; color: #0a0a0a;
+  }
+  .middle { display: flex; flex-direction: column; gap: 3vh; }
+  .headline {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    font-size: 10vw; line-height: 0.95; letter-spacing: -0.04em; color: #0a0a0a;
+  }
+  .benefit {
+    font-family: 'Inter', sans-serif; font-weight: 400;
+    font-size: 3.2vw; line-height: 1.35; color: rgba(10,10,10,0.75); max-width: 85%;
+  }
+  .cta {
+    align-self: flex-start; padding: 2.2vh 5vw;
+    background: #0a0a0a; color: #fbbf24; font-family: 'Inter', sans-serif;
+    font-weight: 600; font-size: 2.6vw; border-radius: 1vw;
+    text-decoration: none; display: inline-block;
+  }
+  .footer {
+    font-family: 'Inter', sans-serif; font-size: 1.8vw;
+    color: rgba(10,10,10,0.55); letter-spacing: 0.05em;
+  }
+</style>
+</head>
+<body>
+<div class="ad">
+  <div class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24"><path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.2L19.8 8 12 11.8 4.2 8 12 4.2zM4 9.6l7 3.5v7.7l-7-3.5V9.6zm9 11.2v-7.7l7-3.5v7.7l-7 3.5z"/></svg>
+    </div>
+    <span class="logo-text">Druk 3D Pro</span>
+  </div>
+  <div class="middle">
+    <div class="headline">Personalizacja<br>od 1 sztuki.</div>
+    <div class="benefit">Imie, logo, data slubu, model auta klienta. Twoja wizja, nasz druk.</div>
+    <a class="cta" href="#">Zamow personalizacje &rarr;</a>
+  </div>
+  <span class="footer">druk3d.pl</span>
+</div>
+</body>
+</html>

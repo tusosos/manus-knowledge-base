@@ -1,0 +1,288 @@
+Prompt: Budowanie 3D Print Business Hub — Aplikacja do Zarządzania Biznesem Druku 3D
+Cel Aplikacji
+Zbudować profesjonalną web app do zarządzania biznesem druku 3D, dedykowaną dla użytkownika posiadającego drukarkę Bambu Lab H2D Combo z podwójnym AMS. Aplikacja powinna wspierać codzienne operacje, śledzenie zamówień, wyceny, analizę konkurencji, i maksymalizować przychody z druku 3D.
+
+
+Wymagania Funkcjonalne
+1. Dashboard Główny (Strona Startowa)
+	•	KPI Cards (4 główne metryki):
+	◦	Przychód miesięczny (zł)
+	◦	Liczba zamówień (szt)
+	◦	Liczba klientów (osób)
+	◦	Godziny druku (h)
+	•	Status Drukarki H2D: Aktualny status, ostatni wydruk, szacowany czas do zakończenia
+	•	Kanban Tasków: Podsumowanie zadań (Do zrobienia / W trakcie / Gotowe)
+	•	Projekty wg Statusu: Liczba projektów w każdym statusie (Pomysł / Prototyp / Testowany / Gotowy)
+	•	Ostatnie Wydruki: 5 ostatnich print jobów z czasem i statusem
+	•	Ostatnie Wyceny: 5 ostatnich wycen z datą i kwotą
+	•	Alerty Magazynu: Filamenty poniżej 200g
+
+2. Codzienne Taski (Kanban Board)
+	•	Kolumny: Do zrobienia → W trakcie → Gotowe
+	•	Pola Tasku: Tytuł, opis, priorytet (niski/średni/wysoki), kategoria, deadline
+	•	Kategorie: Druk, Projektowanie, Wysyłka, Obsługa klienta, Marketing, Inne
+	•	Powtarzające się Taski: Opcja ustawienia cyklicznych zadań (codzienne, tygodniowe)
+	•	CRUD: Dodawanie, edycja, usuwanie tasków z persystencją w bazie
+
+3. Przegląd Projektów
+	•	Galeria Projektów: Miniaturki, nazwy, statusy
+	•	Linki do Modeli: MakerWorld, Printables, Thingiverse, Cults3D, własne
+	•	Status Projektu: Pomysł → Prototyp → Testowany → Gotowy do sprzedaży
+	•	Kalkulacja Marży: Koszt materiału vs cena sprzedaży
+	•	Tagi: Kategoria, materiał, trudność, multicolor
+
+4. Kalkulator Kosztów Wydruku (Dedykowany H2D)
+	•	Wejścia: Waga filamentu (g), czas druku (h), materiał
+	•	Automatyczne Obliczenia:
+	◦	Koszt materiału (baza cen PL)
+	◦	Koszt energii (H2D ~200W)
+	◦	Amortyzacja drukarki
+	◦	Koszt AMS (purge waste przy multicolor)
+	◦	Koszt pracy (przygotowanie, post-processing, pakowanie)
+	•	Wyjścia: Wycena z marżą (50%, 100%, 200%, custom)
+	•	Tryb Multicolor: Dodatkowy koszt za purge waste (8 kolorów AMS)
+
+5. Okazje na Filamenty
+	•	Tabela Cen: Referencyjne ceny za kg dla każdego materiału
+	•	Linki do Sklepów:
+	◦	Polskie: Allegro, 3DJake, Botland, Rosa3D, Fiberlogy, Devil Design
+	◦	Chińskie: AliExpress, Banggood, Temu, Shein
+	•	Promocje: Sekcja z aktualnymi okazjami i linkami
+	•	Alerty Cenowe: “Kup gdy PLA < 60 zł/kg”
+
+6. Generator Treści Ofert
+	•	Szablony Ofert: Allegro, Etsy, OLX, własna strona
+	•	Pola: Nazwa, opis, wymiary, materiał, czas realizacji, cena
+	•	Gotowe Teksty Marketingowe: Copywriting do skopiowania
+	•	Tips: Porady jak pisać oferty które się sprzedają
+
+7. Biznesplan
+	•	Analiza Rynku: Dane AMPOWER 2026 (wzrost 5.6% rynku druku 3D)
+	•	Model Przychodów: Print-on-demand, custom, small batch
+	•	Kalkulacja Kosztów: Stałe (czynsz, ubezpieczenie) i zmienne (materiały, energia)
+	•	Prognoza Przychodów: 3, 6, 12 miesięcy
+	•	Break-even Point: Kiedy biznes się zwróci
+	•	SWOT Analysis: Mocne/słabe strony, szanse, zagrożenia
+
+8. Profil Drukarki H2D
+	•	Specyfikacja: 350°C, dual nozzle, 300×300×400mm, dual AMS (16 kolorów)
+	•	Parametry Druku: Domyślne ustawienia dla każdego materiału
+	•	Kalibracja: Notatki z kalibracji, temperatura, prędkość
+	•	Konserwacja: Historia serwisu, wymiana części
+
+9. Planner Multicolor (8 Kolorów AMS)
+	•	Wizualizacja AMS: 8 slotów, każdy z wybranym kolorem
+	•	Planner: Drag & drop do przypisania kolorów do projektu
+	•	Kalkulacja Purge Waste: Automatyczne obliczenie straty filamentu
+	•	Sugestie: Kombinacje kolorów które dobrze się sprzedają
+
+10. Baza Klientów (Mini-CRM)
+	•	Pola Klienta: Imię, email, telefon, adres, notatki, status (nowy/stały/VIP)
+	•	Historia Zamówień: Lista wszystkich zamówień od klienta
+	•	Preferencje: Ulubione materiały, kolory, style
+	•	Komunikacja: Notatki z ostatniego kontaktu
+
+11. Tracker Magazynu Filamentów
+	•	Stan Magazynu: Ile kg każdego materiału/koloru
+	•	Alerty: Powiadomienie gdy < 500g
+	•	Historia Zakupów: Ceny, daty, dostawcy
+	•	Koszt Średni: Ważony koszt za kg
+
+12. Kolejka Druku / Kalendarz
+	•	Harmonogram: Co drukuje, do kiedy, na której głowicy
+	•	Planowanie: Drag & drop do ustawienia kolejności
+	•	Szacowany Czas: Kiedy będzie gotowe
+	•	Optymalizacja: Grupowanie podobnych materiałów
+
+13. Kalkulator Wysyłki
+	•	Waga Paczki → Koszt InPost/Poczta/DPD/DHL
+	•	Porównanie Cen: Który przewoźnik najtańszy
+	•	Szablony Paczek: Mała/średnia/duża
+	•	Koszt Opakowania: Karton, folia bąbelkowa
+
+14. Centrum Wiedzy / Poradnik
+	•	Checklist Startowy: Jak zacząć biznes druku 3D
+	•	Porady: Rejestracja firmy, podatki, ZUS, wysyłka
+	•	Profile Materiałów: Kiedy PLA, kiedy PETG, kiedy ABS
+	•	Troubleshooting: Najczęstsze problemy z H2D i rozwiązania
+	•	Ustawienia Druku: Domyślne parametry dla każdego materiału
+
+15. Analityka Sprzedaży
+	•	Wykresy: Przychód, koszty, marża, trend (Recharts)
+	•	Top 5 Produktów: Najlepiej sprzedające się wydruki
+	•	Sezonowość: Kiedy sprzedaż rośnie (święta, walentynki)
+	•	Porównanie Kanałów: Allegro vs Etsy vs OLX
+
+16. Generator Wycen dla Klientów
+	•	Formularz: Klient podaje wymiary, materiał, ilość
+	•	Automatyczna Wycena: Kalkulacja z marżą
+	•	Eksport PDF: Profesjonalna oferta/wycena
+	•	Historia Wycen: Archiwum wszystkich wycen
+
+17. Analiza Konkurencji
+	•	Tabela Konkurentów: Nazwa, cennik, technologie, mocne/słabe strony
+	•	Firmy Usługowe: Fibometry, Send3D, 3D-innowacje, Craft3D, P3DRC
+	•	Porównanie Cenników: Ile bierze konkurencja za cm³, za godzinę
+	•	Twoje Przewagi: Multicolor bez malowania, dual nozzle, duży build volume
+	•	Mapa Pozycjonowania: Cena vs jakość vs czas realizacji
+
+18. Bestsellery — Co Drukować na Sprzedaż
+	•	TOP 23 Produktów z marżami i linkami:
+	◦	Fidget toys / smoki (400% marża)
+	◦	Biżuteria 3D (500% marża)
+	◦	Litofany (400% marża)
+	◦	Organizery (200% marża)
+	◦	Miniatury (500% marża)
+	◦	Etui na telefon (300% marża)
+	◦	Dekoracje świąteczne (200% marża)
+	•	Linki do Modeli: MakerWorld, Printables, Cults3D, Thingiverse
+	•	Trendy 2026: Multicolor, articulated toys, personalizacja
+	•	Platformy Sprzedaży: Etsy, Allegro, OLX, Amazon Handmade
+	•	Sekcja Multicolor Premium: Produkty tylko dla H2D + AMS
+
+
+Wymagania Techniczne
+Frontend
+	•	Framework: React 19 + TypeScript
+	•	Styling: Tailwind CSS 4 + ciemny, industrialny temat z amber akcentami
+	•	Komponenty: shadcn/ui (Button, Card, Dialog, Tabs, Slider, Chart, etc.)
+	•	Animacje: Framer Motion (subtelne, mechaniczne)
+	•	Wykresy: Recharts (linie, słupki, koła)
+	•	Routing: Wouter (SPA routing)
+	•	Ikony: Lucide React
+
+Backend
+	•	Server: Express 4 + Node.js
+	•	API: tRPC 11 (type-safe RPC)
+	•	Baza Danych: MySQL/TiDB (Drizzle ORM)
+	•	Autentykacja: Manus OAuth (wbudowana)
+	•	Testy: Vitest (unit tests dla procedur tRPC)
+
+Baza Danych (7 Tabel)
+
+￼
+Deployment
+	•	Hosting: Manus (wbudowany)
+	•	Domain: Automatycznie generowana subdomena
+	•	SSL: Automatycznie
+	•	CI/CD: GitHub integration (opcjonalnie)
+
+
+Design & UX
+Estetyka
+	•	Temat: Ciemny, industrialny (jak panel sterowania drukarki)
+	•	Kolory: Czarny (#0a0a0a), szary (#1a1a1a), amber (#fbbf24)
+	•	Typografia: Monospace dla danych (JetBrains Mono), sans-serif dla tekstu (Inter)
+	•	Ikony: Lucide React (proste, minimalistyczne)
+	•	Animacje: Subtelne, mechaniczne (loading spinners, transitions)
+
+Layout
+	•	Sidebar Navigation: Stały sidebar z kategoryzacją modułów (GŁÓWNE, NARZĘDZIA, ZASOBY, BIZNES, H2D ONLINE)
+	•	Dashboard Layout: Główny widok z headerem, sidebare, content area
+	•	Responsywność: Mobile-first, breakpoints dla tablet/desktop
+
+Interakcje
+	•	Loading States: Spinners, skeletons
+	•	Empty States: Ikony + tekst dla pustych sekcji
+	•	Toasty: Sonner (powiadomienia o sukcesie/błędzie)
+	•	Modals: Dialog do potwierdzenia akcji, edycji
+	•	Drag & Drop: Kanban board, planner multicolor
+
+
+Integracje & API
+Wbudowane (Manus)
+	•	OAuth: Autentykacja użytkownika
+	•	Notifications: Powiadomienia dla właściciela
+	•	File Storage: S3 do przechowywania plików
+	•	LLM: Claude do generowania treści ofert, porad
+
+Opcjonalne (Do Dodania)
+	•	Bambu Cloud API: Pobieranie statusu drukarki H2D w real-time
+	•	Stripe: Płatności online (jeśli będzie e-commerce)
+	•	Email: SendGrid do wysyłania wycen/ofert
+	•	Analytics: Plausible/Fathom do śledzenia użytkowników
+
+
+Fazy Budowy
+Faza 1: MVP (Tydzień 1)
+	•	Inicjalizacja projektu (React + Express + Drizzle)
+	•	Setup bazy danych (7 tabel)
+	•	Budowa 18 modułów frontendu (statyczne)
+	•	Upgrade do full-stack (tRPC + auth)
+	•	Integracja dashboardu z bazą (real KPI)
+
+Faza 2: CRUD Operations (Tydzień 2)
+	•	Podłączenie formularzy tasków do tRPC
+	•	Podłączenie formularzy projektów do tRPC
+	•	Podłączenie formularzy klientów do tRPC
+	•	Podłączenie formularzy magazynu do tRPC
+	•	Podłączenie formularzy kolejki druku do tRPC
+	•	Vitest testy dla wszystkich mutacji
+
+Faza 3: Zaawansowane Funkcje (Tydzień 3)
+	•	Wykresy analityki (Recharts)
+	•	Eksport wycen do PDF (pdfkit)
+	•	Integracja Bambu Cloud API
+	•	Email z wycenami (SendGrid)
+	•	Backup danych (cron job)
+
+Faza 4: Optymalizacja & Launch (Tydzień 4)
+	•	SEO (meta tags, OpenGraph)
+	•	Performance (image optimization, lazy loading)
+	•	Security (CSRF, rate limiting, SQL injection prevention)
+	•	Dokumentacja (README, API docs)
+	•	Launch na Manus
+
+
+Przykładowe Dane do Testowania
+Testowy Projekt
+
+￼
+Testowy Klient
+
+￼
+Testowy Filamet
+
+￼
+
+Checklist Budowy
+	•	Projekt zainicjalizowany
+	•	Baza danych zsynchronizowana
+	•	18 modułów frontendu zbudowanych
+	•	tRPC routers dla wszystkich operacji
+	•	Dashboard zintegrowany z bazą
+	•	Formularze CRUD podłączone
+	•	Wykresy analityki działają
+	•	PDF export działa
+	•	Testy przechodzą (>90% coverage)
+	•	SEO zoptymalizowane
+	•	Aplikacja wdrożona na Manus
+	•	Dokumentacja napisana
+
+
+Notatki
+	•	Wszystkie ceny w PLN (polska waluta)
+	•	Baza danych MySQL/TiDB (Manus wbudowana)
+	•	Autentykacja Manus OAuth (nie trzeba loginu/hasła)
+	•	Aplikacja responsywna (mobile-first)
+	•	Dark mode domyślnie (industrial aesthetic)
+	•	Dane persystentne w bazie (nie w localStorage)
+	•	Real-time updates (React Query + tRPC)
+	•	Optimistic updates dla lepszej UX
+	•	Error handling i loading states wszędzie
+	•	Accessibility (WCAG 2.1 AA)
+
+
+Rezultat Końcowy
+Profesjonalna, w pełni funkcjonalna aplikacja do zarządzania biznesem druku 3D z Bambu Lab H2D. Użytkownik może:
+
+	•	Śledzić codzienne taski i projekty
+	•	Kalkulować koszty wydruków i marże
+	•	Generować wyceny dla klientów (PDF)
+	•	Zarządzać magazynem filamentów
+	•	Planować kolejkę druku (multicolor)
+	•	Analizować sprzedaż i konkurencję
+	•	Poznać najlepiej sprzedające się produkty
+	•	Uczyć się biznesu druku 3D
+
+Aplikacja jest gotowa do użytku w rzeczywistym biznesie druku 3D.
